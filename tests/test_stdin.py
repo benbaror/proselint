@@ -13,5 +13,3 @@ with open(demo_file) as f:
 assert stdin.exit_code == 1
     
 assert stdin.output == demo.output.replace(demo_file, 'stdin')
-
-
