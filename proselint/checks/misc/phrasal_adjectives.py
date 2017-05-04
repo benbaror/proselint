@@ -21,14 +21,17 @@ def check_ly(text):
     """Check the text."""
     err = "garner.phrasal_adjectives.ly"
     msg = u"""No hyphen is necessary in phrasal adjectives with an adverb
-              ending in -ly."""
+              ending in -ly, unless the -ly adverb is part of a longer
+              phrase"""
 
-    return existence_check(text, ["ly-"], err, msg,
+    regex = "\s[^\s-]+ly-"
+
+    return existence_check(text, [regex], err, msg,
                            require_padding=False, offset=-1)
 
 
 @memoize
-def check_examples(text):
+def check(text):
     """Check the text."""
     err = "garner.phrasal_adjectives.examples"
     msg = u"""Hyphenate '{1}', a phrasal adjective, as '{0}'."""
@@ -42,6 +45,7 @@ def check_examples(text):
         ["criminal-law professor", ["criminal law professor"]],
         ["cut-and-dried issue", ["cut and dried issue"]],
         ["downward-sloping line", ["downward sloping line"]],
+        ["English-language learners", ["English language learners"]],
         ["English-speaking people", ["English speaking people"]],
         ["even-numbered", ["even numbered"]],
         ["face-to-face meeting", ["fact to face meeting"]],
@@ -93,6 +97,7 @@ def check_examples(text):
         ["razor-sharp wit", ["razor sharp wit"]],
         ["larger-than-life personality", ["larger than life personality"]],
         ["real-estate prices", ["real estate prices"]],
+        ["real-estate tycoon", ["real estate tycoon"]],
         ["right-wing militia", ["right wing militia"]],
         ["round-trip flight", ["round trip flight"]],
         ["search-and-rescue operation", ["search and rescue operation"]],

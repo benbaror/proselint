@@ -9,15 +9,19 @@
 
 Writing is notoriously hard, even for the best writers, and it's not for lack of good advice — a tremendous amount of knowledge about the craft is strewn across usage guides, dictionaries, technical manuals, essays, pamphlets, websites, and the hearts and minds of great authors and editors. But poring over Strunk & White hardly makes one a better writer — it turns you into neither Strunk nor White. And nobody has the capacity to apply all the advice from *Garner’s Modern American Usage*, a 975-page usage guide, to everything they write. In fact, the whole notion that one becomes a better writer by reading advice on writing rests on untenable assumptions about learning and memory. The traditional formats of knowledge about writing are thus essentially inert, waiting to be transformed.
 
-We devised a simple solution: `proselint`, a linter for prose. (A linter is a computer program that, like a spell checker, scans through a document and analyzes it.)
+We devised a simple solution: `proselint`, a linter for English prose. (A linter is a computer program that, like a spell checker, scans through a document and analyzes it.)
 
 `proselint` places the world’s greatest writers and editors by your side, where they whisper suggestions on how to improve your prose. You’ll be guided by advice inspired by Bryan Garner, David Foster Wallace, Chuck Palahniuk, Steve Pinker, Mary Norris, Mark Twain, Elmore Leonard, George Orwell, Matthew Butterick, William Strunk, E.B. White, Philip Corbett, Ernest Gowers, and the editorial staff of the world’s finest literary magazines and newspapers, among others. Our goal is to aggregate knowledge about best practices in writing and to make that knowledge immediately accessible to all authors in the form of a linter for prose.
 
 `proselint` is a command-line utility that can be integrated into existing tools.
- 
+
 ### Installation
 
-To get this up and running, install it using pip: `pip install proselint`.
+To get this up and running, install it using [pip](https://packaging.python.org/installing/#use-pip-for-installing):
+
+```
+pip install proselint
+```
 
 ### Plugins for other software
 
@@ -27,9 +31,11 @@ To get this up and running, install it using pip: `pip install proselint`.
 - [x] [Sublime Text](https://github.com/amperser/proselint/tree/master/plugins/sublime/SublimeLinter-contrib-proselint)
 - [x] [Atom Editor](https://github.com/smockle/linter-proselint) (thanks to [Clay Miller](https://github.com/smockle)).
 - [x] [Emacs via Flycheck](https://github.com/amperser/proselint/tree/master/plugins/flycheck) (thanks to [Aaron Jacobs](https://github.com/atheriel))
-- [x] [Vim](https://github.com/amperser/proselint/tree/master/plugins/vim) (thanks to [Matthias Bussonnier](https://github.com/Carreau))
+- [x] Vim via [ALE](https://github.com/w0rp/ale) or [Syntastic](https://github.com/vim-syntastic/syntastic) (thanks to @lcd047, @Carreau, and [Daniel M. Capella](https://github.com/polyzen))
 - [x] [Phabricator's `arc` CLI](https://github.com/google/arc-proselint) (thanks to [Jeff Verkoeyen](https://github.com/jverkoey))
-- [x] [Danger](https://github.com/dbgrandi/danger-prose) (thanks to [David Grandinetti](https://github.com/dbgrandi) and [Orta Therox](https://github.com/orta)) 
+- [x] [Danger](https://github.com/dbgrandi/danger-prose) (thanks to [David Grandinetti](https://github.com/dbgrandi) and [Orta Therox](https://github.com/orta))
+- [x] [Visual Studio Code](https://github.com/ppeszko/vscode-proselint) (thanks to [Patryk Peszko](https://github.com/ppeszko))
+- [x] [coala](https://github.com/coala-analyzer/bear-docs/blob/master/docs/ProseLintBear.rst) (thanks to the [coala Development Group](https://github.com/coala-analyzer))  
 
 ### Usage
 
@@ -100,9 +106,31 @@ The command-line utility can also print suggestions in JSON using the `--json` f
 }
 ```
 
+To run the linter as part of another program, you can use the `lint` function in `proselint.tools`:
+
+```python
+import proselint
+
+suggestions = proselint.tools.lint("This sentence is very unique")
+```
+
+This will return a list of suggestions:
+
+```python
+[('weasel_words.very', "Substitute 'damn' every time you're inclined to write 'very;' your editor will delete it and the writing will be just as it should be.", 0, 17, 17, 22, 5, 'warning', None), ('uncomparables.misc', "Comparison of an uncomparable: 'very unique.' is not comparable.", 0, 17, 17, 29, 12, 'warning', None)]
+```
+
 ### Checks
 
-You can disable any of the checks by modifying `.proselintrc`.
+You can disable any of the checks by modifying `~/.proselintrc`:
+
+```json
+{
+  "checks": {
+    "typography.diacritical_marks": false
+  }
+}
+```
 
 | ID    | Description     |
 | ----- | --------------- |
@@ -121,6 +149,8 @@ You can disable any of the checks by modifying `.proselintrc`.
 | `hedging.misc` | Not hedging |
 | `hyperbole.misc` | Not being hyperbolic |
 | `jargon.misc` | Avoiding miscellaneous jargon |
+| `lgbtq.offensive_terms` | Avoding offensive LGBTQ terms |
+| `lgbtq.terms` | Misused LGBTQ terms |
 | `lexical_illusions.misc` | Avoiding lexical illusions |
 | `links.broken` | Linking only to existing sites |
 | `malapropisms.misc` | Avoiding common malapropisms |
@@ -139,7 +169,7 @@ You can disable any of the checks by modifying `.proselintrc`.
 | `misc.latin` | Avoiding overuse of Latin phrases |
 | `misc.many_a` | Many a singular |
 | `misc.metaconcepts` | Avoiding overuse of metaconcepts |
-| `misc.narcisissm` | Talking about the subject, not its study |
+| `misc.narcissism` | Talking about the subject, not its study |
 | `misc.phrasal_adjectives` | Hyphenating phrasal adjectives |
 | `misc.preferred_forms` | Miscellaneous preferred forms |
 | `misc.pretension` | Avoiding being pretentious |
@@ -187,9 +217,20 @@ Interested in contributing to `proselint`? Great — there are plenty of ways yo
 - [Issue Tracker](http://github.com/amperser/proselint/issues)
 - [Source Code](http://github.com/amperser/proselint)
 
-### Support 
+### Support
 
 If you run into a problem, please [open an issue](http://github.com/amperser/proselint/issues) in or send an email to hello@amperser.com.
+
+### Running Automated Tests
+
+Automated tests are included in the `proselint/tests` directory. To run these tests locally, use the test runner [nose](http://nose.readthedocs.io/en/latest/) and run the following commands:
+```bash
+cd tests/
+nosetests
+```
+and watch the output. Nose is compatible with Python versions 2.7, 3.3, 3.4 and 3.5.
+
+All automated tests in `tests/` are run as part of each submitted pull request, including newly added tests.
 
 ### License
 
