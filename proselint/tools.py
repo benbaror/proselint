@@ -90,10 +90,8 @@ def memoize(f):
 
     cache_filename = f.__module__ + "." + f.__name__
     cachepath = os.path.join(cache_dirname, cache_filename)
-
     @functools.wraps(f)
     def wrapped(*args, **kwargs):
-
         # handle instance methods
         if hasattr(f, '__self__'):
             args = args[1:]
@@ -217,12 +215,10 @@ def lint(input_file, debug=False):
 
     # Get the checks.
     checks = get_checks(options)
-
     # Apply all the checks.
     errors = []
     for check in checks:
-
-        result = check(text)
+        result = check('\n'+text+'\n')
 
         for error in result:
             (start, end, check, message, replacements) = error
